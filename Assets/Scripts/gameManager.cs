@@ -11,6 +11,9 @@ public class gameManager : MonoBehaviour
     private int score;
     [SerializeField] AudioClip[] clips;
     protected AudioSource source;
+
+    private int nowCircleNum = 1;
+    private int nextCircleNum = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +38,8 @@ public class gameManager : MonoBehaviour
         gameoverUI.SetActive(true);
     }
 
-    public int selectNextBall(){
+// Nextに表示する次の球を選ぶ
+    public void selectNextBall(){
         float max;
         if(9 <= Mathf.Log10(score)){
             max = 9;
@@ -45,9 +49,22 @@ public class gameManager : MonoBehaviour
             max = Mathf.Log(2,score) + 1;
             
         }
-        Debug.Log(max);
 
-        // source.PlayOneShot(clips[1]);
-        return (int)UnityEngine.Random.Range(1,max);
+        nowCircleNum = nextCircleNum;
+        nextCircleNum = (int)UnityEngine.Random.Range(1,max);
+        Debug.Log("max:"+max+" now"+nowCircleNum+" next"+nextCircleNum);
+    }
+
+    public GameObject instantiateCircle(int circleNum, Vector3 pos){
+            return Instantiate((GameObject)Resources.Load ("Prefab/Circle"+circleNum),
+                    pos, Quaternion.identity);
+    }
+
+    public int getNowCircleNum(){
+        return this.nowCircleNum;
+    }
+
+    public int getNextCircleNum(){
+        return this.nextCircleNum;
     }
 }

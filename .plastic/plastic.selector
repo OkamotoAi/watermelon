@@ -1,0 +1,4 @@
+repository "watermelon@okamotoai0217@cloud"
+  path "/"
+    br "/main"
+    co "/main"

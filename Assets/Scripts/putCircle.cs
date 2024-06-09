@@ -8,6 +8,7 @@ public class putCircle : MonoBehaviour
 
     private Vector2 nowPos, pos;
     public GameObject circle;
+    private Rigidbody2D circleRigidBody;
     public gameManager gm;
     [SerializeField] AudioClip[] clips;
     protected AudioSource source;
@@ -17,11 +18,16 @@ public class putCircle : MonoBehaviour
     {
         gm = GameObject.Find("GameManager").GetComponent<gameManager>();
         source = GetComponents<AudioSource>()[0];
+        
+        circle = gm.instantiateCircle(gm.getNowCircleNum(), this.transform.position);
+        circleRigidBody = circle.GetComponent<Rigidbody2D>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+            
         if (Input.GetKey(KeyCode.Mouse0)) {
             nowPos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             pos = new Vector2(nowPos.x, this.transform.position.y);
@@ -35,6 +41,7 @@ public class putCircle : MonoBehaviour
             }
 
             this.transform.position = pos;
+            circle.transform.position = pos;
         }
 
         
@@ -42,10 +49,18 @@ public class putCircle : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            circle = (GameObject)Resources.Load ("Prefab/Circle"+gm.selectNextBall());
-            Instantiate(circle, this.transform.position - new Vector3(0,1,0), Quaternion.identity);
+            //落下処理
+            circleRigidBody.isKinematic = false;
             source.PlayOneShot(clips[0]);
-            Thread.Sleep(500);
+            
+
+            //gmに対してなんか信号を送る．それをもとにNextを更新する
+
+            //次のボールを生成する
+            gm.selectNextBall();
+            Thread.Sleep(1000);
+            circle = gm.instantiateCircle(gm.getNowCircleNum(), this.transform.position);
+            circleRigidBody = circle.GetComponent<Rigidbody2D>();
         }
 
         

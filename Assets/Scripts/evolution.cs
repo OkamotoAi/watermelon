@@ -25,6 +25,7 @@ public class evolution : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // より左下なオブジェクトをけす
         if (collision.gameObject.name != this.gameObject.name)
         {
             return;
@@ -43,7 +44,6 @@ public class evolution : MonoBehaviour
             return;
         }
 
-        // より左下なオブジェクトをけす
         // 作成する
         larger = (GameObject)Resources.Load (largerPath);
         Instantiate(larger, this.transform.position, Quaternion.identity);
